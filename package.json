@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "apollo-server": "^2.2.6",
-    "graphql": "^14.0.2"
+    "config": "^3.0.0",
+    "graphql": "^14.0.2",
+    "lodash": "^4.17.11",
+    "mongoose": "^5.3.15"
   }
 }
