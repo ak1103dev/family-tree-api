@@ -1,3 +1,8 @@
+const { ApolloError } = require('apollo-server')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs')
+const config = require('config')
+
 const { User, Profile } = require('../models')
 
 const resolvers = {
@@ -16,13 +21,30 @@ const resolvers = {
     }
   },
   Mutation: {
-    login(parent, args) {
+    async login(parent, args) {
       const { username, password } = args
-      console.log('username', username)
-      console.log('password', password)
-      return {
-        token: 'xxx',
-        userId: 'yyy'
+      try {
+        const user = await User.findOne({ username }).lean()
+        if (!user) {
+          throw new ApolloError('LOGIN_FAILED', 401)
+        }
+        const passwordMatch = bcrypt.compareSync(password, user.password);
+        if (!passwordMatch) {
+          throw new ApolloError('LOGIN_FAILED', 401)
+        }
+        const expiresIn = 24 * (60 * 60)
+        const expirationDate = Math.floor(Date.now() / 1000) + expiresIn // 1 day
+        const token = jwt.sign(
+          { userId: user._id, exp: expirationDate },
+          config.get('jwtSecret')
+          // { expiresIn }
+        )
+        return {
+          token,
+          userId: user._id.toString()
+        }
+      } catch(err) {
+        return err
       }
     },
     createProfile() {

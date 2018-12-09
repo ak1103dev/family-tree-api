@@ -1,4 +1,6 @@
 {
   "port": 4000,
-  "mongoUrl": "mongodb://localhost:27017/family"
+  "mongoUrl": "mongodb://localhost:27017/family",
+  "adminPassword": "password",
+  "jwtSecret": "secret"
 }

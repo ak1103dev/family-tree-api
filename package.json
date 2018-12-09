@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "apollo-server": "^2.2.6",
+    "bcryptjs": "^2.4.3",
     "config": "^3.0.0",
     "graphql": "^14.0.2",
+    "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "mongoose": "^5.3.15"
   }
