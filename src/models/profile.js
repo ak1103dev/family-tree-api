@@ -5,6 +5,10 @@ const { ObjectId } = Schema.Types
 
 const schema = new Schema({
   language: String,
+  generation: {
+    ref: 'Generation',
+    type: ObjectId,
+  },
   profileImage: String,
   firstname: String,
   lastname: String,
@@ -27,6 +31,10 @@ const schema = new Schema({
     type: Date,
     default: Date.now
   }
+})
+
+schema.virtual('name').get(function() {
+  return `${this.firstname} ${this.lastname}`
 })
 
 module.exports = mongoose.model('Profile', schema)

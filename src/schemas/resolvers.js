@@ -13,11 +13,11 @@ const resolvers = {
       console.log('context', context)
       console.log('info', info)
       const { language } = args
-      return await Profile.find({ language }).lean()
+      return await Profile.find({ language })
     },
     async getProfile(parent, args, context, info) {
-      const { language, profileId } = args
-      return await Profile.findOne({ _id: profileId, language }).lean()
+      const { profileId } = args
+      return await Profile.findOne({ _id: profileId })
     }
   },
   Mutation: {
@@ -47,11 +47,20 @@ const resolvers = {
         return err
       }
     },
-    createProfile() {
-
+    createProfile(parent, args) {
+      return new Profile(args).save()
     },
-    updateProfile() {
-
+    async updateProfile(parent, args) {
+      const { _id, ...params } = args
+      const profile = await Profile.findById(_id)
+      if (!profile) {
+        throw new ApolloError('PROFILE_NOT_FOUND', 404)
+      }
+      Object.keys(params).map((key) => {
+        profile[key] = params[key]
+      })
+      profile.updatedAt = Date.now()
+      return profile.save()
     }
   }
 }

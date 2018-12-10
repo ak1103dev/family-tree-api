@@ -15,7 +15,10 @@ const typeDefs = gql`
 
   type Profile {
     _id: ID
+    language: String
     name: String
+    firstname: String
+    lastname: String
     nickname: String
     profileImage: String
     gender: String
@@ -26,7 +29,7 @@ const typeDefs = gql`
 
   type Query {
     getProfileList(language: String!): [Profile]
-    getProfile(language: String!, profileId: ID!): Profile
+    getProfile(profileId: ID!): Profile
   }
 
   type Mutation {
@@ -39,18 +42,19 @@ const typeDefs = gql`
       profileImage: String!,
       gender: String!,
       birthdate: Date!,
-      father: ID!,
-      mother: ID!,
+      father: ID,
+      mother: ID,
     ) : Profile
     updateProfile(
-      firstname: String!,
-      lastname: String!,
-      nickname: String!,
-      profileImage: String!,
-      gender: String!,
-      birthdate: Date!,
-      father: ID!,
-      mother: ID!,
+      _id: ID!,
+      firstname: String,
+      lastname: String,
+      nickname: String,
+      profileImage: String,
+      gender: String,
+      birthdate: Date,
+      father: ID,
+      mother: ID,
     ) : Profile
   }
 `
