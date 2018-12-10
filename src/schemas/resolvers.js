@@ -8,15 +8,19 @@ const { User, Profile } = require('../models')
 const resolvers = {
   Query: {
     async getProfileList(parent, args, context, info) {
-      console.log('parent', parent)
-      console.log('args', args)
-      console.log('context', context)
-      console.log('info', info)
       const { language } = args
+      const { isAuthorization } = context
+      if (!isAuthorization) {
+        throw new ApolloError('UNAUTHORIZATION', 401)
+      }
       return await Profile.find({ language })
     },
     async getProfile(parent, args, context, info) {
       const { profileId } = args
+      const { isAuthorization } = context
+      if (!isAuthorization) {
+        throw new ApolloError('UNAUTHORIZATION', 401)
+      }
       return await Profile.findOne({ _id: profileId })
     }
   },
@@ -41,17 +45,25 @@ const resolvers = {
         )
         return {
           token,
-          userId: user._id.toString()
+          userId: user._id
         }
       } catch(err) {
         return err
       }
     },
-    createProfile(parent, args) {
+    createProfile(parent, args, context) {
+      const { isAuthorization } = context
+      if (!isAuthorization) {
+        throw new ApolloError('UNAUTHORIZATION', 401)
+      }
       return new Profile(args).save()
     },
     async updateProfile(parent, args) {
       const { _id, ...params } = args
+      const { isAuthorization } = context
+      if (!isAuthorization) {
+        throw new ApolloError('UNAUTHORIZATION', 401)
+      }
       const profile = await Profile.findById(_id)
       if (!profile) {
         throw new ApolloError('PROFILE_NOT_FOUND', 404)
